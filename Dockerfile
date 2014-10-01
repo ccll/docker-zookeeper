@@ -10,7 +10,7 @@ EXPOSE 2181 2888 3888
 
 WORKDIR /opt/zookeeper-3.4.6
 
-VOLUME ["/opt/zookeeper-3.4.6/conf", "/tmp/zookeeper"]
+ADD run.py /opt/zookeeper-3.4.6/.docker/
 
-ENTRYPOINT ["/opt/zookeeper-3.4.6/bin/zkServer.sh"]
-CMD ["start-foreground"]
+CMD ["python", "/opt/zookeeper-3.4.6/.docker/run.py"]
+
