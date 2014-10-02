@@ -12,5 +12,5 @@ WORKDIR /opt/zookeeper-3.4.6
 ADD zoo.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg
 ADD run /opt/zookeeper-3.4.6/.docker/
 
-CMD [/opt/zookeeper-3.4.6/.docker/run"]
+CMD ["/opt/zookeeper-3.4.6/.docker/run"]
 
