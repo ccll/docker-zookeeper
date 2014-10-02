@@ -5,7 +5,7 @@ counter=1;
 if [ "$ZOOKEEPER_NODES" ] ; then
     IFS=',' read -ra NODES <<< "$ZOOKEEPER_NODES"
     for i in "${NODES[@]}"; do
-        if [ "$i" = "`hostname -i`" ] ; then
+        if [ "$i" = "`echo $(ip -f inet -o addr show ens33|cut -d\  -f 7 | cut -d/ -f 1)`" ] ; then
             echo $counter > /var/lib/zookeeper/myid;
             was=1;
         fi
