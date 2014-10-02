@@ -1,0 +1,31 @@
+#!/bin/bash -e
+
+if [ -z "$ZOOKEEPER_NODES_COUNT" ] ; then
+    ZOOKEEPER_NODES_COUNT=1
+fi
+
+last=0;
+was=0;
+if [ $ZOOKEEPER_NODES_COUNT -gt 1 ] ; then
+    for i in $(seq 1 $ZOOKEEPER_NODES_COUNT); do
+        host="ZOOKEEPER_NODE_HOST_$i";
+        if [ -z ${!host} ] ; then
+            echo "Zookeeper node host $i not specified!"
+            exit 1
+        fi
+
+        if [ "${!host}" = "`hostname -i`" ] ; then
+            was=1;
+        fi
+
+        echo "server.$i=${!host}:2888:3888" >> /opt/zookeeper-3.4.6/conf/zoo.cfg; 
+        last=$i;
+    done
+    if [ $was -eq 0 ] ; then
+        let last=$last+1;
+        echo "server.$last=`hostname -i`:2888:3888" >> /opt/zookeeper-3.4.6/conf/zoo.cfg; 
+        echo $last > /var/lib/zookeeper/myid;
+    fi
+fi
+
+/opt/zookeeper-3.4.6/bin/zkServer.sh start-foreground
