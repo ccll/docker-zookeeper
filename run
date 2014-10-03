@@ -5,10 +5,14 @@ if [ -e $ETCD_ENDPOINT ] ; then
     exit 1;
 fi
 
+if [ -e $IP ] ; then 
+    echo "IP env missing";
+    exit 1;
+fi
+
 was=0;
 counter=1;
 
-IP="`hostname -i`";
 UUID=`curl -sL $ETCD_ENDPOINT/v2/keys/services/zookeeper/$IP | sed -e "s/,/\n/g" | grep "value" | sed -e "s/\"value\":\"//" -e "s/\"//"`;
 if [ "$ZOOKEEPER_NODES" ] ; then
     IFS=',' read -ra NODES <<< "$ZOOKEEPER_NODES"
