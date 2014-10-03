@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-if [-e $ETCD_ENDPOINT ] ; then 
+if [ -e $ETCD_ENDPOINT ] ; then 
     echo "ETCD_ENDPOINT env missing";
     exit 1;
 fi
