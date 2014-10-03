@@ -8,7 +8,7 @@ fi
 was=0;
 counter=1;
 
-IP="`echo $(ip -f inet -o addr show ens33|cut -d\  -f 7 | cut -d/ -f 1)`";
+IP="`hostname -i`";
 UUID=`curl -sL $ETCD_ENDPOINT/v2/keys/services/zookeeper/$IP | sed -e "s/,/\n/g" | grep "value" | sed -e "s/\"value\":\"//" -e "s/\"//"`;
 if [ "$ZOOKEEPER_NODES" ] ; then
     IFS=',' read -ra NODES <<< "$ZOOKEEPER_NODES"
@@ -27,7 +27,7 @@ if [ "$ZOOKEEPER_NODES" ] ; then
 
     if [ $was -eq 0 ] ; then
         echo "server.$UUID=$IP:2888:3888" >> /opt/zookeeper-3.4.6/conf/zoo.cfg; 
-        echo $counter > /var/lib/zookeeper/myid;
+        echo $UUID > /var/lib/zookeeper/myid;
     fi
 fi
 
