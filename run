@@ -1,22 +1,32 @@
 #!/bin/bash -e
 
+if [-e $ETCD_ENDPOINT ] ; then 
+    echo "ETCD_ENDPOINT env missing";
+    exit 1;
+fi
+
 was=0;
 counter=1;
+
+IP="`echo $(ip -f inet -o addr show ens33|cut -d\  -f 7 | cut -d/ -f 1)`";
+UUID=`curl -sL $ETCD_ENDPOINT/v2/keys/services/zookeeper/$IP | sed -e "s/,/\n/g" | grep "value" | sed -e "s/\"value\":\"//" -e "s/\"//"`;
 if [ "$ZOOKEEPER_NODES" ] ; then
     IFS=',' read -ra NODES <<< "$ZOOKEEPER_NODES"
     for i in "${NODES[@]}"; do
-        if [ "$i" = "`echo $(ip -f inet -o addr show ens33|cut -d\  -f 7 | cut -d/ -f 1)`" ] ; then
-            echo $counter > /var/lib/zookeeper/myid;
+        if [ "$i" = "$IP" ] ; then
+            echo $UUID > /var/lib/zookeeper/myid;
             was=1;
         fi
 
-        echo "server.$counter=$i:2888:3888" >> /opt/zookeeper-3.4.6/conf/zoo.cfg; 
+        VALUE=`curl -sL $ETCD_ENDPOINT/v2/keys/services/zookeeper/$i | sed -e "s/,/\n/g" | grep "value" | sed -e "s/\"value\":\"//" -e "s/\"//"`;
+
+        echo "server.$VALUE=$i:2888:3888" >> /opt/zookeeper-3.4.6/conf/zoo.cfg; 
 
         let counter=$counter+1;
     done
 
     if [ $was -eq 0 ] ; then
-        echo "server.$counter=`echo $(ip -f inet -o addr show ens33|cut -d\  -f 7 | cut -d/ -f 1)`:2888:3888" >> /opt/zookeeper-3.4.6/conf/zoo.cfg; 
+        echo "server.$UUID=$IP:2888:3888" >> /opt/zookeeper-3.4.6/conf/zoo.cfg; 
         echo $counter > /var/lib/zookeeper/myid;
     fi
 fi
