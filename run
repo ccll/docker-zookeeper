@@ -10,11 +10,9 @@ if [ -e $IP ] ; then
 fi
 
 was=0;
-counter=1;
 UUID="";
 while true; do 
     UUID=`curl -sL $ETCD_ENDPOINT/v2/keys/services/zookeeper/$IP | sed -e "s/,/\n/g" | grep "value" | sed -e "s/\"value\":\"//" -e "s/\"//"`;
-    echo $UUID;
 
     if [ ! -z "$UUID" -a "$UUID" != " " ]; then
         echo "Str is not null or space"
@@ -37,7 +35,6 @@ if [ "ZOOKEEPER_NODES" ] ; then
 
         echo "server.$VALUE=$i:2888:3888" >> /opt/zookeeper-3.4.6/conf/zoo.cfg; 
 
-        let counter=$counter+1;
     done
 
     if [ $was -eq 0 ] ; then
