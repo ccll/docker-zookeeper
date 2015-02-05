@@ -9,10 +9,10 @@ ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
 EXPOSE 2181 2888 3888
 
-WORKDIR /opt/zookeeper-$ZK_VERSION
+WORKDIR /opt/zookeeper-3.4.6
 
-ADD zoo.cfg /opt/zookeeper-$ZK_VERSION/conf/zoo.cfg
-ADD run /opt/zookeeper-$ZK_VERSION/.docker/
+ADD zoo.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg
+ADD run /opt/zookeeper-3.4.6/.docker/
 
-CMD ["/opt/zookeeper-$ZK_VERSION/.docker/run"]
+CMD ["/opt/zookeeper-3.4.6/.docker/run"]
 
