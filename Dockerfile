@@ -1,4 +1,4 @@
-FROM gregory90/java
+FROM gregory90/mesos:0.21.1
 
 RUN wget -q -O - http://apache.mirrors.pair.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz | tar -xzf - -C /opt
 RUN mkdir -p /var/lib/zookeeper
