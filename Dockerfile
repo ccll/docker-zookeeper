@@ -1,4 +1,4 @@
-FROM gregory90/java:1.7
+FROM gregory90/mesos:0.21.1
 
 ENV ZK_VERSION 3.4.6
 
